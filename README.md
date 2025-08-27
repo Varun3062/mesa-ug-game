@@ -1,6 +1,6 @@
 # Mesa UG Game
 
-A single player web game built with React and TypeScript.
+A single player web game built with React and TypeScript, optimized for Replit hosting.
 
 ## Features
 
@@ -9,15 +9,32 @@ A single player web game built with React and TypeScript.
 - TypeScript for type safety
 - PWA-ready structure
 - Mobile-friendly design
+- Optimized for Replit hosting
 
 ## Getting Started
 
-### Prerequisites
+### Option 1: Running on Replit (Recommended)
+
+1. **Fork this repository** or create a new Replit project
+2. **Import the code** into your Replit workspace
+3. **Install dependencies** by running in the Replit shell:
+   ```bash
+   npm install
+   ```
+4. **Start the development server**:
+   ```bash
+   npm start
+   ```
+5. **View your app** in the Replit webview or use the "Open in new tab" button
+
+### Option 2: Local Development
+
+#### Prerequisites
 
 - Node.js (version 14 or higher)
 - npm or yarn
 
-### Installation
+#### Installation
 
 1. Clone the repository:
 ```bash
@@ -39,10 +56,18 @@ The app will open in your browser at `http://localhost:3000`.
 
 ### Available Scripts
 
-- `npm start` - Runs the app in development mode
+- `npm start` - Runs the app in development mode (optimized for Replit)
 - `npm build` - Builds the app for production
 - `npm test` - Launches the test runner
 - `npm eject` - Ejects from Create React App (one-way operation)
+
+## Replit Configuration
+
+This project includes special configuration files for Replit:
+
+- `.replit` - Specifies the run command and environment settings
+- `replit.nix` - Defines the required system dependencies
+- Updated `package.json` with Replit-optimized start script
 
 ## Project Structure
 
@@ -79,6 +104,23 @@ src/
 - TypeScript
 - CSS3 with modern features
 - Create React App
+- Optimized for Replit hosting
+
+## Troubleshooting on Replit
+
+### Common Issues:
+
+1. **Port Issues**: The app is configured to run on port 3000 by default
+2. **Dependencies**: Make sure to run `npm install` first
+3. **Browser**: The app will open in Replit's webview automatically
+4. **Hot Reload**: Changes will automatically reload in the webview
+
+### If the app doesn't start:
+
+1. Check the console for error messages
+2. Try running `npm install` again
+3. Restart the Replit workspace
+4. Check if all files are properly uploaded
 
 ## Contributing
 
