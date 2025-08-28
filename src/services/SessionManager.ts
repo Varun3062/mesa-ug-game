@@ -20,6 +20,20 @@ export class SessionManager {
       const today = DailyNumberGenerator.getCurrentISTDateString();
       const targetNumber = DailyNumberGenerator.getTodayNumber();
 
+      // Check if Airtable is configured
+      if (!AirtableService.isConfigured()) {
+        // Fallback to local session without Airtable
+        console.log('Airtable not configured, using local session');
+        return {
+          sessionId: `local-${user.id}-${today}`,
+          userId: user.id,
+          date: today,
+          targetNumber,
+          isCompleted: false,
+          score: 0
+        };
+      }
+
       // Create or get existing session from Airtable
       const sessionId = await AirtableService.createOrUpdateSession(user.id, today);
 
@@ -38,7 +52,17 @@ export class SessionManager {
       };
     } catch (error) {
       console.error('Error initializing session:', error);
-      return null;
+      // Fallback to local session
+      const today = DailyNumberGenerator.getCurrentISTDateString();
+      const targetNumber = DailyNumberGenerator.getTodayNumber();
+      return {
+        sessionId: `local-${user.id}-${today}`,
+        userId: user.id,
+        date: today,
+        targetNumber,
+        isCompleted: false,
+        score: 0
+      };
     }
   }
 
@@ -47,14 +71,25 @@ export class SessionManager {
    */
   static async completeSession(sessionId: string, isWon: boolean): Promise<boolean> {
     try {
-      const score = isWon ? 1 : 0;
-      const success = await AirtableService.updateSessionScore(sessionId, score);
-      
-      if (success) {
-        console.log(`Session ${sessionId} marked as ${isWon ? 'won' : 'lost'}`);
+      // Check if this is a local session
+      if (sessionId.startsWith('local-')) {
+        console.log(`Local session ${sessionId} marked as ${isWon ? 'won' : 'lost'}`);
+        return true;
       }
-      
-      return success;
+
+      // Use Airtable if configured
+      if (AirtableService.isConfigured()) {
+        const score = isWon ? 1 : 0;
+        const success = await AirtableService.updateSessionScore(sessionId, score);
+        
+        if (success) {
+          console.log(`Session ${sessionId} marked as ${isWon ? 'won' : 'lost'}`);
+        }
+        
+        return success;
+      }
+
+      return true; // Local mode
     } catch (error) {
       console.error('Error completing session:', error);
       return false;
@@ -69,19 +104,27 @@ export class SessionManager {
       const newNoSessions = user.noSessions + 1;
       const newScore = isWon ? user.score + 1 : user.score;
 
-      const success = await AirtableService.updateUserStats(
-        user.id, 
-        newNoSessions, 
-        newScore
-      );
+      // Update local user data first
+      user.noSessions = newNoSessions;
+      user.score = newScore;
 
-      if (success) {
-        // Update local user data
-        user.noSessions = newNoSessions;
-        user.score = newScore;
+      // Use Airtable if configured
+      if (AirtableService.isConfigured()) {
+        const success = await AirtableService.updateUserStats(
+          user.id, 
+          newNoSessions, 
+          newScore
+        );
+
+        if (success) {
+          console.log('User stats updated in Airtable');
+        }
+
+        return success;
       }
 
-      return success;
+      console.log('User stats updated locally (Airtable not configured)');
+      return true; // Local mode
     } catch (error) {
       console.error('Error updating user stats:', error);
       return false;

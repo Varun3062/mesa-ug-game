@@ -5,8 +5,26 @@ import { AuthService, User, AirtableUser, AuthResult } from '../utils/AuthServic
 const AIRTABLE_API_KEY = process.env.REACT_APP_AIRTABLE_API_KEY || '';
 const AIRTABLE_BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID || '';
 
-// Initialize Airtable
-const base = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(AIRTABLE_BASE_ID);
+// Debug: Log configuration status (remove in production)
+console.log('Airtable Configuration Status:');
+console.log('- API Key available:', !!AIRTABLE_API_KEY);
+console.log('- Base ID available:', !!AIRTABLE_BASE_ID);
+console.log('- Both configured:', !!(AIRTABLE_API_KEY && AIRTABLE_BASE_ID));
+
+// Initialize Airtable only if credentials are available
+let base: any = null;
+
+try {
+  if (AIRTABLE_API_KEY && AIRTABLE_BASE_ID) {
+    const Airtable = require('airtable');
+    base = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(AIRTABLE_BASE_ID);
+    console.log('✅ Airtable initialized successfully');
+  } else {
+    console.log('⚠️ Airtable not configured - using demo mode');
+  }
+} catch (error) {
+  console.warn('❌ Airtable initialization failed:', error);
+}
 
 export class AirtableService {
   private static readonly USERS_TABLE = 'Users';
@@ -16,7 +34,7 @@ export class AirtableService {
    * Check if Airtable is properly configured
    */
   static isConfigured(): boolean {
-    return !!(AIRTABLE_API_KEY && AIRTABLE_BASE_ID);
+    return !!(AIRTABLE_API_KEY && AIRTABLE_BASE_ID && base);
   }
 
   /**
@@ -24,7 +42,7 @@ export class AirtableService {
    */
   static async createUser(username: string, email: string, password: string): Promise<AuthResult> {
     try {
-      if (!this.isConfigured()) {
+      if (!this.isConfigured() || !base) {
         throw new Error('Airtable not configured');
       }
 
@@ -83,7 +101,7 @@ export class AirtableService {
    */
   static async authenticateUser(username: string, password: string): Promise<AuthResult> {
     try {
-      if (!this.isConfigured()) {
+      if (!this.isConfigured() || !base) {
         throw new Error('Airtable not configured');
       }
 
@@ -206,7 +224,7 @@ export class AirtableService {
    */
   static async createOrUpdateSession(userId: string, date: string): Promise<string | null> {
     try {
-      if (!this.isConfigured()) {
+      if (!this.isConfigured() || !base) {
         throw new Error('Airtable not configured');
       }
 
@@ -242,7 +260,7 @@ export class AirtableService {
    */
   static async updateSessionScore(sessionId: string, score: number): Promise<boolean> {
     try {
-      if (!this.isConfigured()) {
+      if (!this.isConfigured() || !base) {
         throw new Error('Airtable not configured');
       }
 
@@ -267,7 +285,7 @@ export class AirtableService {
    */
   static async updateUserStats(userId: string, noSessions: number, score: number): Promise<boolean> {
     try {
-      if (!this.isConfigured()) {
+      if (!this.isConfigured() || !base) {
         throw new Error('Airtable not configured');
       }
 
