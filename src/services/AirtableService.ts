@@ -26,7 +26,7 @@ try {
 }
 
 export class AirtableService {
-  private static readonly USERS_TABLE = 'Users';
+  private static readonly USERS_TABLE = 'User';
   private static readonly SESSIONS_TABLE = 'Sessions';
 
   /**
