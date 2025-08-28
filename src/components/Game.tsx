@@ -1,32 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import { DailyNumberGenerator } from '../utils/DailyNumberGenerator';
 import { GameLogic, GameState } from '../utils/GameLogic';
+import { SessionManager, GameSession } from '../services/SessionManager';
+import { AuthService, User } from '../utils/AuthService';
 import GuessInput from './GuessInput';
 import GuessHistory from './GuessHistory';
 import './Game.css';
 
 const Game: React.FC = () => {
   const [gameState, setGameState] = useState<GameState | null>(null);
+  const [session, setSession] = useState<GameSession | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showTarget, setShowTarget] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   // Initialize game on component mount
   useEffect(() => {
     initializeGame();
   }, []);
 
-  const initializeGame = () => {
+  const initializeGame = async () => {
     setIsLoading(true);
     
     try {
-      // Generate today's number
-      const todayNumber = DailyNumberGenerator.getTodayNumber();
+      // Get current user
+      const currentUser = AuthService.getCurrentUser();
+      if (!currentUser) {
+        console.error('No authenticated user found');
+        setIsLoading(false);
+        return;
+      }
       
-      // Initialize game state
-      const newGameState = GameLogic.initializeGame(todayNumber);
+      setUser(currentUser);
+
+      // Initialize session with Airtable
+      const gameSession = await SessionManager.initializeSession(currentUser);
       
+      if (!gameSession) {
+        console.error('Failed to initialize session');
+        setIsLoading(false);
+        return;
+      }
+
+      setSession(gameSession);
+
+      // Initialize game state with the target number from session
+      const newGameState = GameLogic.initializeGame(gameSession.targetNumber);
       setGameState(newGameState);
-      console.log('Today\'s number:', todayNumber); // For debugging
+      
+      console.log('Today\'s number:', gameSession.targetNumber); // For debugging
     } catch (error) {
       console.error('Error initializing game:', error);
     } finally {
@@ -34,15 +56,31 @@ const Game: React.FC = () => {
     }
   };
 
-  const handleGuess = (guess: number) => {
-    if (!gameState) return;
+  const handleGuess = async (guess: number) => {
+    if (!gameState || !session || !user) return;
 
     // Add guess to game state
     const updatedGameState = GameLogic.addGuess(gameState, guess);
     setGameState(updatedGameState);
 
-    // If game is won, show target number after a delay
+    // If game is won, update session and user stats
     if (updatedGameState.isWon) {
+      try {
+        // Mark session as completed
+        await SessionManager.completeSession(session.sessionId, true);
+        
+        // Update user statistics
+        await SessionManager.updateUserStats(user, true);
+        
+        // Update local user data
+        AuthService.storeUserSession(user);
+        
+        console.log('Game completed successfully!');
+      } catch (error) {
+        console.error('Error updating session/user stats:', error);
+      }
+
+      // Show target number after a delay
       setTimeout(() => {
         setShowTarget(true);
       }, 2000);
@@ -72,14 +110,14 @@ const Game: React.FC = () => {
     return (
       <div className="game-container">
         <div className="loading-screen">
-          <div className="loading-spinner">🎲</div>
-          <p>Loading today's puzzle...</p>
+          <div className="loading-spinner">Loading...</div>
+          <p>Initializing today's puzzle...</p>
         </div>
       </div>
     );
   }
 
-  if (!gameState) {
+  if (!gameState || !session) {
     return (
       <div className="game-container">
         <div className="error-screen">
@@ -106,6 +144,12 @@ const Game: React.FC = () => {
               {gameState.isWon ? 'Won!' : 'Playing'}
             </span>
           </div>
+          {user && (
+            <div className="stat">
+              <label>Total Score:</label>
+              <span>{user.score}</span>
+            </div>
+          )}
         </div>
         
         <div className="game-controls">

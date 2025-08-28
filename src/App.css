@@ -15,7 +15,19 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.App-header h1 {
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-left {
+  text-align: left;
+}
+
+.header-left h1 {
   font-size: 2.5rem;
   font-weight: 300;
   margin-bottom: 0.5rem;
@@ -23,12 +35,62 @@
   letter-spacing: -0.5px;
 }
 
-.App-header p {
+.header-left p {
   font-size: 1.1rem;
   opacity: 0.7;
   font-weight: 400;
   color: #7f8c8d;
   margin: 0;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.username {
+  font-size: 1rem;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.logout-button {
+  padding: 0.5rem 1rem;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.logout-button:hover {
+  background: #c0392b;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(231, 76, 60, 0.3);
+}
+
+.loading-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: #2c3e50;
+}
+
+.loading-spinner {
+  font-size: 1.2rem;
+  color: #3498db;
 }
 
 main {
@@ -40,15 +102,57 @@ main {
 }
 
 @media (max-width: 768px) {
-  .App-header h1 {
+  .App-header {
+    padding: 1.5rem;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .header-left {
+    text-align: center;
+  }
+  
+  .header-left h1 {
     font-size: 2rem;
   }
   
-  .App-header p {
+  .header-left p {
     font-size: 1rem;
+  }
+  
+  .user-info {
+    flex-direction: column;
+    gap: 0.5rem;
   }
   
   main {
     padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .App-header {
+    padding: 1rem;
+  }
+  
+  .header-left h1 {
+    font-size: 1.8rem;
+  }
+  
+  .header-left p {
+    font-size: 0.9rem;
+  }
+  
+  .username {
+    font-size: 0.9rem;
+  }
+  
+  .logout-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
   }
 }
