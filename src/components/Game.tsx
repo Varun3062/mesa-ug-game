@@ -58,7 +58,7 @@ const Game: React.FC = () => {
     if (!gameState) return 'Loading...';
     
     if (gameState.isWon) {
-      return '🎉 Congratulations! You solved it!';
+      return 'Congratulations! You solved it!';
     }
     
     if (gameState.attempts === 0) {
@@ -139,7 +139,7 @@ const Game: React.FC = () => {
 
           {gameState.isWon && (
             <div className="victory-message">
-              <h3>🎉 You Won! 🎉</h3>
+              <h3>You Won!</h3>
               <p>You solved the puzzle in {gameState.attempts} {gameState.attempts === 1 ? 'attempt' : 'attempts'}!</p>
               <button 
                 className="btn btn-secondary"

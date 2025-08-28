@@ -83,7 +83,7 @@ const GuessInput: React.FC<GuessInputProps> = ({ onGuess, disabled = false, isLo
         )}
         
         <div className="input-hint">
-          <p>💡 Enter 3 unique digits (e.g., 123, 456, 789)</p>
+          <p>Enter 3 unique digits (e.g., 123, 456, 789)</p>
         </div>
       </form>
     </div>

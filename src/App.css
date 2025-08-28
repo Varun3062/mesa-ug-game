@@ -3,27 +3,32 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
 .App-header {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   padding: 2rem;
-  color: white;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #2c3e50;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .App-header h1 {
-  font-size: 3rem;
-  font-weight: 700;
+  font-size: 2.5rem;
+  font-weight: 300;
   margin-bottom: 0.5rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  color: #2c3e50;
+  letter-spacing: -0.5px;
 }
 
 .App-header p {
-  font-size: 1.2rem;
-  opacity: 0.9;
-  font-weight: 300;
+  font-size: 1.1rem;
+  opacity: 0.7;
+  font-weight: 400;
+  color: #7f8c8d;
+  margin: 0;
 }
 
 main {

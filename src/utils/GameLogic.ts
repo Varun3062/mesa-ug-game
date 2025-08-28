@@ -184,7 +184,7 @@ export class GameLogic {
    */
   static getFeedbackMessage(cows: number, bulls: number): string {
     if (bulls === 3) {
-      return "🎉 Congratulations! You've found the number!";
+      return "Congratulations! You've found the number!";
     }
     
     const parts: string[] = [];

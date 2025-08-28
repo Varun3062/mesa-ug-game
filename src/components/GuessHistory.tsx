@@ -48,13 +48,13 @@ const GuessHistory: React.FC<GuessHistoryProps> = ({
             
             <div className="guess-feedback">
               <div className="feedback-item">
-                <span className="feedback-icon">🐄</span>
+                <span className="feedback-icon">C</span>
                 <span className="feedback-label">Cows:</span>
                 <span className="feedback-value">{guess.cows}</span>
               </div>
               
               <div className="feedback-item">
-                <span className="feedback-icon">🐂</span>
+                <span className="feedback-icon">B</span>
                 <span className="feedback-label">Bulls:</span>
                 <span className="feedback-value">{guess.bulls}</span>
               </div>
@@ -62,7 +62,7 @@ const GuessHistory: React.FC<GuessHistoryProps> = ({
             
             {guess.isCorrect && (
               <div className="correct-badge">
-                🎉 Correct!
+                Correct!
               </div>
             )}
             
