@@ -11,11 +11,11 @@ interface AuthProps {
 const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | undefined>(undefined);
 
   const handleLogin = async (username: string, password: string) => {
     setIsLoading(true);
-    setError(null);
+    setError(undefined);
 
     try {
       // Check if Airtable is configured
@@ -51,7 +51,7 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
 
   const handleRegister = async (username: string, email: string, password: string) => {
     setIsLoading(true);
-    setError(null);
+    setError(undefined);
 
     try {
       // Check if Airtable is configured
@@ -87,12 +87,12 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
 
   const switchToLogin = () => {
     setIsLogin(true);
-    setError(null);
+    setError(undefined);
   };
 
   const switchToRegister = () => {
     setIsLogin(false);
-    setError(null);
+    setError(undefined);
   };
 
   return (
