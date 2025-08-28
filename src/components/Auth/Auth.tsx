@@ -18,8 +18,14 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
     setError(undefined);
 
     try {
+      // Debug: Log Airtable configuration status
+      console.log('🔍 Checking Airtable configuration for login...');
+      const isConfigured = AirtableService.isConfigured();
+      console.log('Airtable configured:', isConfigured);
+
       // Check if Airtable is configured
-      if (!AirtableService.isConfigured()) {
+      if (!isConfigured) {
+        console.log('⚠️ Airtable not configured - using demo mode');
         // Fallback to simulation for demo purposes
         const result = await simulateLogin(username, password);
         
@@ -32,13 +38,16 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
         return;
       }
 
+      console.log('✅ Using real Airtable authentication');
       // Use real Airtable authentication
       const result = await AirtableService.authenticateUser(username, password);
       
       if (result.success && result.user) {
+        console.log('✅ User authenticated successfully from Airtable');
         AuthService.storeUserSession(result.user);
         onAuthSuccess(result.user);
       } else {
+        console.error('❌ Authentication failed:', result.error);
         setError(result.error || 'Login failed');
       }
     } catch (err) {
@@ -54,8 +63,14 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
     setError(undefined);
 
     try {
+      // Debug: Log Airtable configuration status
+      console.log('🔍 Checking Airtable configuration...');
+      const isConfigured = AirtableService.isConfigured();
+      console.log('Airtable configured:', isConfigured);
+
       // Check if Airtable is configured
-      if (!AirtableService.isConfigured()) {
+      if (!isConfigured) {
+        console.log('⚠️ Airtable not configured - using demo mode');
         // Fallback to simulation for demo purposes
         const result = await simulateRegister(username, email, password);
         
@@ -68,13 +83,16 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
         return;
       }
 
+      console.log('✅ Using real Airtable registration');
       // Use real Airtable registration
       const result = await AirtableService.createUser(username, email, password);
       
       if (result.success && result.user) {
+        console.log('✅ User created successfully in Airtable');
         AuthService.storeUserSession(result.user);
         onAuthSuccess(result.user);
       } else {
+        console.error('❌ Registration failed:', result.error);
         setError(result.error || 'Registration failed');
       }
     } catch (err) {

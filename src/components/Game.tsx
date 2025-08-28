@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { DailyNumberGenerator } from '../utils/DailyNumberGenerator';
 import { GameLogic, GameState } from '../utils/GameLogic';
 import { SessionManager, GameSession } from '../services/SessionManager';
 import { AuthService, User } from '../utils/AuthService';

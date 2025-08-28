@@ -1,5 +1,4 @@
-import Airtable from 'airtable';
-import { AuthService, User, AirtableUser, AuthResult } from '../utils/AuthService';
+import { AuthService, AirtableUser, AuthResult } from '../utils/AuthService';
 
 // Airtable configuration
 const AIRTABLE_API_KEY = process.env.REACT_APP_AIRTABLE_API_KEY || '';
